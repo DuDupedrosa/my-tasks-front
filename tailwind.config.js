@@ -9,7 +9,21 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+      },
+      backgroundColor: {
+        main: '#0E1218',
+      },
+      minWidth: {
+        buttonLading: '220px',
+      },
+      maxWidth: {
+        landingImage: '620px',
+      },
+    },
   },
   plugins: [],
 };
