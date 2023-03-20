@@ -9,15 +9,12 @@ import {
   ChevronRightIcon,
 } from '@radix-ui/react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import LogoComponent from '../LogoComponent';
 
 const TheHeader = () => {
   return (
     <header className="flex justify-between gap-5 items-center">
-      <Link href="/">
-        <span className="block text-white font-poppins text-3xl cursor-pointer font-bold">
-          TaskBlog
-        </span>
-      </Link>
+      <LogoComponent isLink={true} />
       <div className="md:block hidden">
         <ButtonLading outline={true} text={'Entrar'} />
       </div>
