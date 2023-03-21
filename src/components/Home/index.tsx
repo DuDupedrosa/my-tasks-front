@@ -3,8 +3,11 @@ import ButtonLading from '../Buttons/ButtonLading';
 import TheHeader from '../TheHeader';
 import LadingImage from '../../assets/images/lading-image.png';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const TheHome = () => {
+  const router = useRouter();
+
   return (
     <div className="h-full bg-main md:pl-14 md:pr-14 pt-10 pb-12 pl-5 pr-5">
       <TheHeader />
@@ -16,7 +19,10 @@ const TheHome = () => {
           <p className="font-roboto text-center lg:text-start font-semibold text-white text-xl">
             Comece a organizar suas tarefas de uma maneira prática
           </p>
-          <div className="mt-12 md:mt-16 text-center lg:text-start">
+          <div
+            className="mt-12 md:mt-16 text-center lg:text-start"
+            onClick={() => router.push('/login')}
+          >
             <ButtonLading outline={false} text={'Entrar'} />
           </div>
         </div>

@@ -18,6 +18,7 @@ import {
 } from '../Toast/DefaultToasts';
 import { useRouter } from 'next/router';
 import { AiFillEye } from 'react-icons/ai';
+import ErrorMessageInputDefault from '../Form/ErrorMessageInputDefault';
 
 type InputsTypes = {
   email: string;
@@ -86,11 +87,7 @@ const Login = () => {
                 id="email"
                 {...register('email', { required: true })}
               />
-              {errors.email && (
-                <span className={requiredInputMessageStyles}>
-                  {requiredInputErrorDefaultMessage}
-                </span>
-              )}
+              {errors.email && <ErrorMessageInputDefault />}
             </div>
             <div className="mt-5">
               <label htmlFor="password" className={LabelInputStyles}>
@@ -110,11 +107,7 @@ const Login = () => {
                   size="24"
                 />
               </div>
-              {errors.password && (
-                <span className={requiredInputMessageStyles}>
-                  {requiredInputErrorDefaultMessage}
-                </span>
-              )}
+              {errors.password && <ErrorMessageInputDefault />}
             </div>
             <div className="mt-8">
               <SubmitButton

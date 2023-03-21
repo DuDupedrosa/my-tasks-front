@@ -10,12 +10,15 @@ import {
 } from '@radix-ui/react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import LogoComponent from '../LogoComponent';
+import { useRouter } from 'next/router';
 
 const TheHeader = () => {
+  const router = useRouter();
+
   return (
     <header className="flex justify-between gap-5 items-center">
       <LogoComponent isLink={true} />
-      <div className="md:block hidden">
+      <div className="md:block hidden" onClick={() => router.push('/login')}>
         <ButtonLading outline={true} text={'Entrar'} />
       </div>
       <div className="md:hidden">
