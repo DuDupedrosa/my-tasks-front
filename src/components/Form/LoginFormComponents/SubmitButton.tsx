@@ -1,14 +1,23 @@
+import LoadingSpinner from '@/components/LoadingSpinner';
 import React from 'react';
 
 interface SubmitButtonProps {
   label: string;
+  loading: boolean;
+  loadingColor: string;
+  loadingSize?: string;
 }
 
-const SubmitButton = ({ label }: SubmitButtonProps) => {
+const SubmitButton = ({
+  label,
+  loading,
+  loadingColor,
+  loadingSize,
+}: SubmitButtonProps) => {
   return (
     <button
       type="submit"
-      className="
+      className={`
       font-poppins
       text-lg
       text-white 
@@ -19,12 +28,17 @@ const SubmitButton = ({ label }: SubmitButtonProps) => {
       bg-violet-700 
       text-center 
       rounded-md 
-      cursor-pointer
       hover:bg-violet-900
       transition-all
-      "
+      ${loading ? 'cursor-wait' : 'cursor-pointer'}
+      `}
     >
-      {label}
+      {loading && (
+        <div className="grid place-items-center">
+          <LoadingSpinner color={loadingColor} size={loadingSize} />
+        </div>
+      )}
+      {!loading && label}
     </button>
   );
 };

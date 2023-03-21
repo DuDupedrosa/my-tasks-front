@@ -11,6 +11,13 @@ import {
   LabelInputStyles,
 } from '../Form/LoginFormComponents/styles/input';
 import { requiredInputMessageStyles } from '@/styles/form/requiredInputMessage';
+import { useLoginUser } from './api/login/useLoginMutation';
+import {
+  errorDefaultToast,
+  errorDefaultToastMessage,
+} from '../Toast/DefaultToasts';
+import { useRouter } from 'next/router';
+import { AiFillEye } from 'react-icons/ai';
 
 type InputsTypes = {
   email: string;
@@ -18,6 +25,10 @@ type InputsTypes = {
 };
 
 const Login = () => {
+  const useLoginMutation = useLoginUser();
+  const router = useRouter();
+  const [showPassword, setShowPassword] = React.useState(false);
+
   const {
     register,
     handleSubmit,
@@ -26,8 +37,35 @@ const Login = () => {
   } = useForm<InputsTypes>();
 
   const onSubmit: SubmitHandler<InputsTypes> = (data) => {
-    console.log('%c⧭', 'color: #ff0000', data);
+    useLoginMutation.mutate(data);
   };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // controle da request
+  React.useEffect(() => {
+    if (
+      useLoginMutation.isError &&
+      // @ts-ignore
+      useLoginMutation.error.response.status === 404
+    ) {
+      errorDefaultToast(
+        'Ops! Credenciais inválidas, por favor, cheque seu email e senha novamente.'
+      );
+    } else if (useLoginMutation.isError) {
+      errorDefaultToast(errorDefaultToastMessage);
+    }
+  }, [useLoginMutation.isError]);
+
+  React.useEffect(() => {
+    if (useLoginMutation.isSuccess) {
+      localStorage.setItem('token', useLoginMutation.data.jwtToken);
+      localStorage.setItem('user', JSON.stringify(useLoginMutation.data));
+      router.push('/tasks');
+    }
+  }, [useLoginMutation.isSuccess]);
 
   return (
     <div className="min-h-screen bg-main md:pl-14 md:pr-14 pt-10 pb-12 pl-5 pr-5">
@@ -58,12 +96,20 @@ const Login = () => {
               <label htmlFor="password" className={LabelInputStyles}>
                 Senha
               </label>
-              <input
-                type="password"
-                className={InputStyles}
-                id="password"
-                {...register('password', { required: true, minLength: 8 })}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className={InputStyles}
+                  id="password"
+                  {...register('password', { required: true, minLength: 8 })}
+                />
+                <AiFillEye
+                  color="#ffffff"
+                  className="absolute top-2 right-4 cursor-pointer"
+                  onClick={handleShowPassword}
+                  size="24"
+                />
+              </div>
               {errors.password && (
                 <span className={requiredInputMessageStyles}>
                   {requiredInputErrorDefaultMessage}
@@ -71,7 +117,11 @@ const Login = () => {
               )}
             </div>
             <div className="mt-8">
-              <SubmitButton label="Entrar" />
+              <SubmitButton
+                label="Entrar"
+                loading={useLoginMutation.isLoading}
+                loadingColor={'#ffffff'}
+              />
             </div>
           </form>
           <div className="mt-8 flex justify-between">
