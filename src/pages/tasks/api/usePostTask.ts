@@ -1,5 +1,5 @@
 import { http } from '@/pages/api/http';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 const createTask = async (payload: object) => {
   const token = localStorage.getItem('token');
@@ -13,7 +13,16 @@ const createTask = async (payload: object) => {
 };
 
 export const useCreateTask = () => {
-  return useMutation((payload: object) => {
-    return createTask(payload);
-  });
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (payload: object) => {
+      return createTask(payload);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['getTasksToDo']);
+      },
+    }
+  );
 };
