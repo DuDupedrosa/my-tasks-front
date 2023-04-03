@@ -2,10 +2,9 @@ import { taskStatus } from '@/components/enums/tasksStatusEnum';
 import { http } from '@/pages/api/http';
 import { useMutation, useQueryClient } from 'react-query';
 
-const editTask = async (payload: object) => {
+const deleteTask = async (id: string) => {
   const token = localStorage.getItem('token');
-
-  const { data } = await http.put(`tasks`, payload, {
+  const { data } = await http.delete(`tasks/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -13,16 +12,15 @@ const editTask = async (payload: object) => {
   return data;
 };
 
-export const useEditTask = () => {
+export const useDeleteTask = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (payload: object) => {
-      return editTask(payload);
+    (id: string) => {
+      return deleteTask(id);
     },
     {
       onSuccess: (response) => {
-        // invalidando o get de acordo com a task adicionada para não invalidar todas as requisições de uma vez
         if (response.status === taskStatus.PENDING) {
           queryClient.invalidateQueries(['getTasksToDo']);
         } else if (response.status === taskStatus.IN_PROGRESS) {
@@ -30,6 +28,8 @@ export const useEditTask = () => {
         } else if (response.status === taskStatus.FINALIZED) {
           queryClient.invalidateQueries(['getTasksFinalized']);
         }
+
+        queryClient.invalidateQueries(['checkUserAlreadyTask']);
       },
     }
   );

@@ -1,14 +1,12 @@
 import React from 'react';
-import { useGetTasksToDo } from './api/useGetTasksToDo';
 import { BsTrash3Fill } from 'react-icons/bs';
-import FirstTaskAlert from './FirstTaskAlert';
-import { CircularProgress } from '@chakra-ui/react';
 import LoadingCircularProgress from '../LoadingCircularProgress';
+import { useGetTasksFinalized } from './api/useGetTasksFinalized';
 import { BsFillPencilFill } from 'react-icons/bs';
 
 interface ToDoTasksProps {
   handleOpenEditDialog: (taskToDoEdit: Task) => void;
-  handleOpenDeleteDialog: (taskToDelete: Task) => void;
+  handleOpenDeleteDialog: (taskToDoEdit: Task) => void;
 }
 
 interface Task {
@@ -21,11 +19,11 @@ interface Task {
   _id: string;
 }
 
-const ToDoTasks = ({
+const FinalizedTasks = ({
   handleOpenEditDialog,
   handleOpenDeleteDialog,
 }: ToDoTasksProps) => {
-  const getAllTasks = useGetTasksToDo();
+  const getTasksMutation = useGetTasksFinalized();
 
   const handleEdiTask = (e: Task) => {
     handleOpenEditDialog(e);
@@ -37,12 +35,12 @@ const ToDoTasks = ({
 
   return (
     <>
-      {getAllTasks.status === 'loading' && <LoadingCircularProgress />}
-      {getAllTasks.status !== 'loading' && (
+      {getTasksMutation.status === 'loading' && <LoadingCircularProgress />}
+      {getTasksMutation.status !== 'loading' && (
         <>
-          {getAllTasks.data && getAllTasks.data.length > 0 && (
+          {getTasksMutation.data && getTasksMutation.data.length > 0 && (
             <div className="flex gap-5 md:gap-10 flex-wrap">
-              {getAllTasks.data.map((item: Task, i: number) => {
+              {getTasksMutation.data.map((item: Task, i: number) => {
                 return (
                   <div
                     className="w-[260px] h-[260px] rounded-lg p-2 relative"
@@ -70,11 +68,9 @@ const ToDoTasks = ({
                         size="20"
                       />
                     </div>
-                    <div
-                      className="absolute bottom-5 right-5"
-                      onClick={(e) => handleDeleteTask(item)}
-                    >
+                    <div className="absolute bottom-5 right-5">
                       <BsTrash3Fill
+                        onClick={(e) => handleOpenDeleteDialog(item)}
                         className="text-red-700 cursor-pointer"
                         size="20"
                       />
@@ -90,4 +86,4 @@ const ToDoTasks = ({
   );
 };
 
-export default ToDoTasks;
+export default FinalizedTasks;

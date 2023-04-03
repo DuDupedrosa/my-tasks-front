@@ -1,3 +1,4 @@
+import { taskStatus } from '@/components/enums/tasksStatusEnum';
 import { http } from '@/pages/api/http';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -20,8 +21,18 @@ export const useCreateTask = () => {
       return createTask(payload);
     },
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['getTasksToDo']);
+      onSuccess: (response) => {
+        // invalidando o get de acordo com a task adicionada para não invalidar todas as requisições de uma vez
+        if (response.status === taskStatus.PENDING) {
+          queryClient.invalidateQueries(['getTasksToDo']);
+        } else if (response.status === taskStatus.IN_PROGRESS) {
+          queryClient.invalidateQueries(['getTaskProgress']);
+        } else if (response.status === taskStatus.FINALIZED) {
+          queryClient.invalidateQueries(['getTasksFinalized']);
+        }
+
+        // sempre invalida o patch que diz se tem task ou não
+        queryClient.invalidateQueries(['checkUserAlreadyTask']);
       },
     }
   );

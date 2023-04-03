@@ -26,6 +26,13 @@ import {
 } from '@chakra-ui/react';
 import { QueryClient } from 'react-query';
 import { useEditTask } from './api/usePutTask';
+import InProgressTasks from '@/components/Tasks/InProgressTasks';
+import FinalizedTasks from '@/components/Tasks/FinalizedTasks';
+import { useDeleteTask } from './api/useDeleteTask';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { useCheckUserAlreadyTask } from './api/usePatchTask';
+import UseHeader from '@/components/UserHeader';
+import useMedia from '@/hooks/useMedia';
 
 type DialogFormTypes = {
   name: string;
@@ -82,10 +89,16 @@ const Tasks = () => {
   } | null>(null);
   const [editTask, setEditTask] = React.useState(false);
   const [editTaskId, setEditTaskId] = React.useState<string>('');
+  const [openModalDeleteTask, setOpenModalDeleteTask] =
+    React.useState<boolean>(false);
+  const [taskToDelete, setTaskToDelete] = React.useState<Task | null>(null);
+  const mobile = useMedia('(max-width: 769px)');
 
   // apis
   const createTaskMutation = useCreateTask();
   const editTaskMutation = useEditTask();
+  const deleteTaskMutation = useDeleteTask();
+  const checkUserAlreadyTaskMutation = useCheckUserAlreadyTask();
 
   const {
     register,
@@ -118,9 +131,9 @@ const Tasks = () => {
       tailwindProp: 'sky-500',
     },
     {
-      label: 'Vermelho',
-      value: '#be123c',
-      tailwindProp: 'red-700',
+      label: 'Verde',
+      value: '#22c55e',
+      tailwindProp: 'green-500',
     },
     {
       label: 'Amarelo',
@@ -348,6 +361,20 @@ const Tasks = () => {
     }
   }, [editTaskMutation.isError]);
 
+  // api - delete
+  React.useEffect(() => {
+    if (deleteTaskMutation.isSuccess) {
+      successDefaultToast('Task deleta com sucesso');
+      setOpenModalDeleteTask(false);
+    }
+  }, [deleteTaskMutation.isSuccess]);
+
+  React.useEffect(() => {
+    if (deleteTaskMutation.isError) {
+      errorDefaultToast(errorDefaultToastMessage);
+    }
+  }, [deleteTaskMutation.isError]);
+
   // effects
   React.useEffect(() => {
     if (!openModalAddTask) {
@@ -390,64 +417,140 @@ const Tasks = () => {
     }
   };
 
+  const handleDeleteTask = (task: Task) => {
+    setOpenModalDeleteTask(true);
+    setTaskToDelete(task);
+  };
+
+  const handleGoDeleteTask = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (taskToDelete) {
+      deleteTaskMutation.mutate(taskToDelete._id);
+    }
+  };
+
   return (
     <>
       <div className="bg-main pt-5 pb-5 md:pl-14 md:pr-14 pl-5 pr-5">
-        <TheHeader />
+        <UseHeader />
       </div>
       <div className="md:pl-14 md:pr-14 pl-5 pr-5 relative">
         <div
-          className="absolute right-20 -top-16"
+          className="absolute right-5 md:right-20 -top-16"
           onClick={() => {
-            console.log('%c⧭', 'color: #bfffc8', 'abri', openModalAddTask);
             setOpenModalAddTask(true);
           }}
         >
           <ButtonAddTask />
         </div>
         <Tabs.Root className="TabsRoot mt-32" defaultValue="tab1">
-          <Tabs.List className="TabsList" aria-label="Manage your account">
+          <Tabs.List
+            className="TabsList overflow-x-scroll md:overflow-x-hidden md:pb-0 pb-4"
+            aria-label="Manage your account"
+          >
             <Tabs.Trigger className="TabsTrigger" value="tab1">
-              <span className="block font-poppins text-lg text-violet-700 font-semibold uppercase cursor-pointer">
+              <span className="block font-poppins text-sm whitespace-nowrap md:text-lg text-violet-700 font-semibold uppercase cursor-pointer">
                 Para fazer
               </span>
             </Tabs.Trigger>
             <Tabs.Trigger className="TabsTrigger" value="tab2">
-              <span className="block font-poppins text-lg text-violet-700 font-semibold uppercase cursor-pointer">
+              <span className="block font-poppins text-sm md:text-lg whitespace-nowrap text-violet-700 font-semibold uppercase cursor-pointer">
                 Em andamento
               </span>
             </Tabs.Trigger>
             <Tabs.Trigger className="TabsTrigger" value="tab3">
-              <span className="block font-poppins text-lg text-violet-700 font-semibold uppercase cursor-pointer">
+              <span className="block font-poppins text-sm md:text-lg whitespace-nowrap text-violet-700 font-semibold uppercase cursor-pointer">
                 Finalizadas
               </span>
             </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content className="TabsContent" value="tab1">
-            <ToDoTasks handleOpenEditDialog={(task) => handleEditTask(task)} />
+            <ToDoTasks
+              handleOpenEditDialog={(task) => handleEditTask(task)}
+              handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
+            />
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="tab2">
-            <p>content 2</p>
+            <InProgressTasks
+              handleOpenEditDialog={(task) => handleEditTask(task)}
+              handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
+            />
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="tab3">
-            <p>content 3</p>
+            <FinalizedTasks
+              handleOpenEditDialog={(task) => handleEditTask(task)}
+              handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
+            />
           </Tabs.Content>
         </Tabs.Root>
-        <FirstTaskAlert handleAddTask={() => setOpenModalAddTask(true)} />
+        {checkUserAlreadyTaskMutation.data &&
+          !checkUserAlreadyTaskMutation.data.alreadyTask && (
+            <FirstTaskAlert handleAddTask={() => setOpenModalAddTask(true)} />
+          )}
+        {/* modal - delete */}
+        <Modal
+          size={mobile ? 'xs' : 'lg'}
+          isOpen={openModalDeleteTask}
+          onClose={() => setOpenModalDeleteTask(false)}
+          isCentered={true}
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>
+              <h2 className="font-poppins text-2xl text-black font-semibold text-center mb-5">
+                Deletar task
+              </h2>
+              <p className="font-roboto text-center text-base md:text-lg font-semibold text-black">
+                Tem certeza que deseja deletar a task?
+                <span className="text-red-600 block text-center">
+                  {taskToDelete?.name}
+                </span>
+              </p>
+            </ModalHeader>
+            <ModalCloseButton className="cursor-pointer" />
+            <ModalBody>
+              <div className="flex gap-5 justify-center pb-2">
+                <button
+                  onClick={(e) => handleGoDeleteTask(e)}
+                  className={`cursor-pointer grid place-items-center border-2 border-solid border-red-600 p-2 bg-red-600 text-base font-poppins font-semibold min-w-[100px]
+                text-white rounded-lg text-center ${
+                  deleteTaskMutation.isLoading && 'cursor-wait'
+                }`}
+                  disabled={deleteTaskMutation.isLoading}
+                >
+                  {deleteTaskMutation.isLoading ? (
+                    <LoadingSpinner color="#ffffff" size="20" />
+                  ) : (
+                    'Deletar'
+                  )}
+                </button>
+                <button
+                  className="cursor-pointer  p-2 bg-white border-solid border-2 border-violet-700 text-base font-poppins font-semibold min-w-[100px]
+               text-black rounded-lg text-center"
+                  onClick={(e) => setOpenModalDeleteTask(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
-        {/* modal */}
+        {/* modal - add - edit*/}
         <div>
           <Modal
+            size={mobile ? 'xs' : 'lg'}
             isOpen={openModalAddTask}
             onClose={() => setOpenModalAddTask(false)}
           >
             <ModalOverlay />
             <ModalContent>
               <ModalHeader className="DialogTitle text-center">
-                <span className="font-poppins text-xl mb-4 block text-black font-medium">
+                <span className="font-poppins text-2xl mb-4 block text-black font-medium">
                   Adicionar Tarefa
                 </span>
-                <p className="text-center">
+                <p className="text-center font-poppins text-base text-black font-normal">
                   Preenche os campos abaixo, para adicionar sua tarefa
                 </p>
               </ModalHeader>
