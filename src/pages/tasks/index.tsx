@@ -1,4 +1,3 @@
-import TheHeader from '@/components/TheHeader';
 import React from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import ToDoTasks from '@/components/Tasks/ToDoTasks';
@@ -8,7 +7,7 @@ import { TaskInput, TaskLabel } from '@/components/Form/Task/styles/input';
 import Select from 'react-select';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import ErrorMessageInputDefault from '@/components/Form/ErrorMessageInputDefault';
-import { useCreateTask } from './api/usePostTask';
+import { useCreateTask } from '../../api/tasksAPi/usePostTask';
 import SubmitButton from '@/components/Form/LoginFormComponents/SubmitButton';
 import {
   errorDefaultToast,
@@ -25,12 +24,12 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import { QueryClient } from 'react-query';
-import { useEditTask } from './api/usePutTask';
+import { useEditTask } from '../../api/tasksAPi/usePutTask';
 import InProgressTasks from '@/components/Tasks/InProgressTasks';
 import FinalizedTasks from '@/components/Tasks/FinalizedTasks';
-import { useDeleteTask } from './api/useDeleteTask';
+import { useDeleteTask } from '../../api/tasksAPi/useDeleteTask';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { useCheckUserAlreadyTask } from './api/usePatchTask';
+import { useCheckUserAlreadyTask } from '../../api/tasksAPi/usePatchTask';
 import UseHeader from '@/components/UserHeader';
 import useMedia from '@/hooks/useMedia';
 

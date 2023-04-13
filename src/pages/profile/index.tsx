@@ -2,7 +2,7 @@ import SubmitButton from '@/components/Form/LoginFormComponents/SubmitButton';
 import { TaskInput, TaskLabel } from '@/components/Form/Task/styles/input';
 import UseHeader from '@/components/UserHeader';
 import React from 'react';
-import { useGetUser } from './api/useGetUser';
+import { useGetUser } from '../../api/profileApi/useGetUser';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   errorDefaultToast,
@@ -13,7 +13,7 @@ import {
 import LoadingSpinner from '@/components/LoadingSpinner';
 import LoadingCircularProgress from '@/components/LoadingCircularProgress';
 import ErrorMessageInputDefault from '@/components/Form/ErrorMessageInputDefault';
-import { useEditUser } from './api/usePutEditUser';
+import { useEditUser } from '../../api/profileApi/usePutEditUser';
 
 type UserFormType = {
   name: string;
