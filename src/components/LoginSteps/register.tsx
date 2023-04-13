@@ -88,7 +88,11 @@ const Register = () => {
       setSamePassword(false);
     } else {
       setSubmitSamePasswordChange(false);
-      createUserMutation.mutate(data);
+      createUserMutation.mutate({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
     }
   };
 
