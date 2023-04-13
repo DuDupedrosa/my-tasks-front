@@ -1,13 +1,6 @@
-import Link from 'next/link';
 import React from 'react';
 import ButtonLading from '../Buttons/ButtonLading';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import {
-  HamburgerMenuIcon,
-  DotFilledIcon,
-  CheckIcon,
-  ChevronRightIcon,
-} from '@radix-ui/react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import LogoComponent from '../LogoComponent';
 import { useRouter } from 'next/router';
@@ -25,7 +18,7 @@ const TheHeader = () => {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button className="IconButton" aria-label="Customise options">
-              <GiHamburgerMenu size="32" />
+              <GiHamburgerMenu size="120" />
             </button>
           </DropdownMenu.Trigger>
 

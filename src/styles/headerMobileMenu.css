@@ -105,12 +105,11 @@ button {
 .IconButton {
   font-family: inherit;
   border-radius: 8px;
-  height: 45px;
-  width: 45px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--violet11);
+  background: transparent !important;
+  top: 40px !important;
 }
 .IconButton:hover {
   background-color: var(--violet3);

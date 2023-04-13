@@ -17,6 +17,7 @@ http.interceptors.response.use(
     if (errStatus === 401) {
       window.location.href = '/login';
       localStorage.removeItem('token');
+      localStorage.setItem('unauthorized', 'true');
       errorDefaultToast('Você não tem permissão para acessar essa página');
     }
     return Promise.reject(error);

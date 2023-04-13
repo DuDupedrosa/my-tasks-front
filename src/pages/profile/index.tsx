@@ -7,6 +7,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   errorDefaultToast,
   errorDefaultToastMessage,
+  successDefaultMessage,
+  successDefaultToast,
 } from '@/components/Toast/DefaultToasts';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import LoadingCircularProgress from '@/components/LoadingCircularProgress';
@@ -42,7 +44,6 @@ const Profile = () => {
     let payload: UserEdit = { ...data, _id: null };
     payload._id = userId;
 
-    console.log('%c⧭', 'color: #7f2200', payload);
     editUserMutation.mutate(payload);
   };
 
@@ -50,18 +51,30 @@ const Profile = () => {
     if (getUserMutation.isSuccess) {
       const { email, name, _id } = getUserMutation.data;
 
-      console.log('%c⧭', 'color: #994d75', name);
       setValue('email', email);
       setValue('name', name);
       setUserId(_id);
     }
   }, [getUserMutation.isSuccess]);
 
+  // controle das requests
   React.useEffect(() => {
     if (getUserMutation.isError) {
       errorDefaultToast(errorDefaultToastMessage);
     }
   }, [getUserMutation.isError]);
+
+  React.useEffect(() => {
+    if (editUserMutation.isSuccess) {
+      successDefaultToast(successDefaultMessage);
+    }
+  }, [editUserMutation.isSuccess]);
+
+  React.useEffect(() => {
+    if (editUserMutation.isError) {
+      errorDefaultToast(errorDefaultToastMessage);
+    }
+  }, [editUserMutation.isError]);
 
   return (
     <div>
@@ -74,7 +87,10 @@ const Profile = () => {
         </h1>
         {getUserMutation.isLoading && <LoadingCircularProgress />}
         {!getUserMutation.isLoading && (
-          <form className="mt-12 max-w-[50%]" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="mt-6 md:mt-12  md:max-w-[50%]"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <div>
               <label htmlFor="name" className={TaskLabel}>
                 Usuário
@@ -85,24 +101,24 @@ const Profile = () => {
                 className={TaskInput}
                 {...register('name', { required: true })}
               />
-              {errors.email && <ErrorMessageInputDefault />}
+              {errors.name && <ErrorMessageInputDefault />}
             </div>
             <div className="mt-5">
-              <label htmlFor="name" className={TaskLabel}>
+              <label htmlFor="email" className={TaskLabel}>
                 Email
               </label>
               <input
-                type="text"
-                id="name"
+                type="email"
+                id="email"
                 className={TaskInput}
                 {...register('email', { required: true })}
               />
-              {errors.name && <ErrorMessageInputDefault />}
+              {errors.email && <ErrorMessageInputDefault />}
             </div>
             <div className="max-w-[220px] mt-8">
               <SubmitButton
                 label="Editar"
-                loading={false}
+                loading={editUserMutation.isLoading}
                 loadingColor="#ffffff"
                 loadingSize="24"
               />

@@ -16,6 +16,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { useRouter } from 'next/router';
+import { BsListTask } from 'react-icons/bs';
 
 const UseHeader = () => {
   const [user, setUser] = React.useState<{
@@ -80,6 +81,20 @@ const UseHeader = () => {
                 >
                   <FaRegUser />
                   Perfil / editar
+                </Link>
+              </MenuItem>
+              <MenuItem
+                className="cursor-pointer w-32 mt-2"
+                maxWidth="max-content"
+                bg="transparent"
+                _hover={{ bg: 'transparent' }}
+              >
+                <Link
+                  href="/tasks"
+                  className="flex gap-2 items-center cursor-pointer text-lg font-poppins text-black"
+                >
+                  <BsListTask />
+                  Minhas tarefas
                 </Link>
               </MenuItem>
               <MenuItem
