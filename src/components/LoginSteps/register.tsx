@@ -205,7 +205,9 @@ const Register = () => {
                 <AiFillEye
                   color={disabledInputPassword ? '#cccccc' : '#ffffff'}
                   className={`absolute top-2 right-4 ${
-                    true ? 'cursor-not-allowed' : 'cursor-pointer'
+                    disabledInputPassword
+                      ? 'cursor-not-allowed'
+                      : 'cursor-pointer'
                   }`}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   size="24"
