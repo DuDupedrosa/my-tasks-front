@@ -8,6 +8,7 @@ import AlertNotTask from './AlertNotTask';
 interface ToDoTasksProps {
   handleOpenEditDialog: (taskToDoEdit: Task) => void;
   handleOpenDeleteDialog: (taskToDoEdit: Task) => void;
+  handleAddTask: () => void;
 }
 
 interface Task {
@@ -23,6 +24,7 @@ interface Task {
 const InProgressTasks = ({
   handleOpenEditDialog,
   handleOpenDeleteDialog,
+  handleAddTask,
 }: ToDoTasksProps) => {
   const getTasksMutation = useGetTaskProgress();
 
@@ -40,7 +42,10 @@ const InProgressTasks = ({
       {getTasksMutation.status !== 'loading' && (
         <>
           {getTasksMutation.data.length === 0 && (
-            <AlertNotTask step="em andamento" />
+            <AlertNotTask
+              step="em andamento"
+              handleAddTask={() => handleAddTask()}
+            />
           )}
           {getTasksMutation.data && getTasksMutation.data.length > 0 && (
             <div className="flex gap-5 md:gap-10 flex-wrap">

@@ -466,27 +466,30 @@ const Tasks = () => {
           </Tabs.List>
           <Tabs.Content className="TabsContent" value="tab1">
             <ToDoTasks
+              handleAddTask={() => setOpenModalAddTask(true)}
               handleOpenEditDialog={(task) => handleEditTask(task)}
               handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
             />
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="tab2">
             <InProgressTasks
+              handleAddTask={() => setOpenModalAddTask(true)}
               handleOpenEditDialog={(task) => handleEditTask(task)}
               handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
             />
           </Tabs.Content>
           <Tabs.Content className="TabsContent" value="tab3">
             <FinalizedTasks
+              handleAddTask={() => setOpenModalAddTask(true)}
               handleOpenEditDialog={(task) => handleEditTask(task)}
               handleOpenDeleteDialog={(task) => handleDeleteTask(task)}
             />
           </Tabs.Content>
         </Tabs.Root>
-        {checkUserAlreadyTaskMutation.data &&
+        {/* {checkUserAlreadyTaskMutation.data &&
           !checkUserAlreadyTaskMutation.data.alreadyTask && (
             <FirstTaskAlert handleAddTask={() => setOpenModalAddTask(true)} />
-          )}
+          )} */}
         {/* modal - delete */}
         <Modal
           size={mobile ? 'xs' : 'lg'}

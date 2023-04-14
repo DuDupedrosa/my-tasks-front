@@ -8,6 +8,7 @@ import AlertNotTask from './AlertNotTask';
 interface ToDoTasksProps {
   handleOpenEditDialog: (taskToDoEdit: Task) => void;
   handleOpenDeleteDialog: (taskToDoEdit: Task) => void;
+  handleAddTask: () => void;
 }
 
 interface Task {
@@ -23,6 +24,7 @@ interface Task {
 const FinalizedTasks = ({
   handleOpenEditDialog,
   handleOpenDeleteDialog,
+  handleAddTask,
 }: ToDoTasksProps) => {
   const getTasksMutation = useGetTasksFinalized();
 
@@ -40,7 +42,10 @@ const FinalizedTasks = ({
       {getTasksMutation.status !== 'loading' && (
         <>
           {getTasksMutation.data.length === 0 && (
-            <AlertNotTask step="Finalizada" />
+            <AlertNotTask
+              step="Finalizada"
+              handleAddTask={() => handleAddTask()}
+            />
           )}
           {getTasksMutation.data && getTasksMutation.data.length > 0 && (
             <div className="flex gap-5 md:gap-10 flex-wrap">
