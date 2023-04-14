@@ -3,6 +3,7 @@ import { BsTrash3Fill } from 'react-icons/bs';
 import LoadingCircularProgress from '../LoadingCircularProgress';
 import { useGetTasksFinalized } from './api/useGetTasksFinalized';
 import { BsFillPencilFill } from 'react-icons/bs';
+import AlertNotTask from './AlertNotTask';
 
 interface ToDoTasksProps {
   handleOpenEditDialog: (taskToDoEdit: Task) => void;
@@ -38,6 +39,9 @@ const FinalizedTasks = ({
       {getTasksMutation.status === 'loading' && <LoadingCircularProgress />}
       {getTasksMutation.status !== 'loading' && (
         <>
+          {getTasksMutation.data.length === 0 && (
+            <AlertNotTask step="Finalizada" />
+          )}
           {getTasksMutation.data && getTasksMutation.data.length > 0 && (
             <div className="flex gap-5 md:gap-10 flex-wrap">
               {getTasksMutation.data.map((item: Task, i: number) => {

@@ -5,6 +5,7 @@ import FirstTaskAlert from './FirstTaskAlert';
 import { CircularProgress } from '@chakra-ui/react';
 import LoadingCircularProgress from '../LoadingCircularProgress';
 import { BsFillPencilFill } from 'react-icons/bs';
+import AlertNotTask from './AlertNotTask';
 
 interface ToDoTasksProps {
   handleOpenEditDialog: (taskToDoEdit: Task) => void;
@@ -40,6 +41,7 @@ const ToDoTasks = ({
       {getAllTasks.status === 'loading' && <LoadingCircularProgress />}
       {getAllTasks.status !== 'loading' && (
         <>
+          {getAllTasks.data.length === 0 && <AlertNotTask step="para fazer" />}
           {getAllTasks.data && getAllTasks.data.length > 0 && (
             <div className="flex gap-5 md:gap-10 flex-wrap">
               {getAllTasks.data.map((item: Task, i: number) => {

@@ -27,7 +27,7 @@ export const errorDefaultToast = (message: string) =>
     theme: 'colored',
   });
 
-export const successDefaultMessage = 'Todas as mudanças foram salvar';
+export const successDefaultMessage = 'Todas as mudanças foram salvas.';
 
 export const successDefaultToast = (message: string) =>
   toast.success(message, {
