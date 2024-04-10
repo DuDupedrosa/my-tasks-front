@@ -228,7 +228,7 @@ const Register = () => {
           </form>
           <div className="mt-8 flex justify-between">
             <Link
-              href="login"
+              href="/login"
               className="decoration-solid underline font-poppins text-sm text-violet-500 font-normal tracking-wide hover:text-violet-700 transition-all"
             >
               Já tem cadastro?
